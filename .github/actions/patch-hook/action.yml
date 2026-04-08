@@ -1,0 +1,61 @@
+name: Kernel hook patch
+description: Apply the selected non-kprobe KernelSU hook.
+runs:
+  using: composite
+  steps:
+    - name: 🪝 Apply selected hook
+      shell: bash
+      run: |
+        set -euo pipefail
+        cd "$GITHUB_WORKSPACE"
+        HOOK="${HOOK_TYPE:-kprobes}"
+
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "🪝 Kernel hook: ${HOOK}"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+        case "$HOOK" in
+          scope-min-1.6)
+            if grep -q "ksu_handle_execveat" fs/exec.c 2>/dev/null; then
+              echo "ℹ️  Scope-min hook already present"
+            else
+              curl -fsSL --retry 3 \
+                https://raw.githubusercontent.com/OmarAlsmehan/Random-stuff/e2dca691b866415c8ec59f306536f59c633be8e7/scope-min-manual-hook.1.6-5.4.patch \
+                -o "$RUNNER_TEMP/scope-min.patch"
+              patch -p1 < "$RUNNER_TEMP/scope-min.patch"
+            fi
+            ;;
+          rksu)
+            if grep -q "ksu_handle_execveat" fs/exec.c 2>/dev/null; then
+              echo "ℹ️  RKSU hook already present"
+            else
+              curl -fsSL --retry 3 \
+                https://raw.githubusercontent.com/rksuorg/kernel_patches/refs/heads/master/manual_hook/kernel-4.19_5.4.patch \
+                -o "$RUNNER_TEMP/rksu.patch"
+              patch -p1 < "$RUNNER_TEMP/rksu.patch"
+            fi
+            ;;
+          syscall)
+            curl -fsSL --retry 3 \
+              https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/syscall_hook_patches.sh \
+              -o "$RUNNER_TEMP/syscall_hook_patches.sh"
+            chmod +x "$RUNNER_TEMP/syscall_hook_patches.sh"
+            bash "$RUNNER_TEMP/syscall_hook_patches.sh"
+            ;;
+          inline)
+            curl -fsSL --retry 3 \
+              https://raw.githubusercontent.com/JackA1ltman/NonGKI_Kernel_Build_2nd/refs/heads/mainline/Patches/susfs_inline_hook_patches.sh \
+              -o "$RUNNER_TEMP/susfs_inline_hook_patches.sh"
+            chmod +x "$RUNNER_TEMP/susfs_inline_hook_patches.sh"
+            bash "$RUNNER_TEMP/susfs_inline_hook_patches.sh"
+            ;;
+          kprobes)
+            echo "ℹ️  kprobes selected — no external hook patch required"
+            ;;
+          *)
+            echo "::error::Unsupported hook: $HOOK"
+            exit 1
+            ;;
+        esac
+
+        echo "✅ Hook step finished"

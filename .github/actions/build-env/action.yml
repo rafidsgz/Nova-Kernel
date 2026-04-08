@@ -1,0 +1,36 @@
+name: Compilation environment preparation
+description: Install the host dependencies and configure the build environment.
+runs:
+  using: composite
+  steps:
+    - name: 📦 Install host dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "📦 Installing build dependencies"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        sudo apt-get update -qq
+        sudo apt-get install -y \
+          git curl wget unzip tar zstd lz4 zip patch file \
+          bc bison flex libssl-dev libelf-dev libncurses-dev \
+          python3 cpio rsync make gcc g++ binutils
+
+    - name: 💾 Configure swap
+      shell: bash
+      run: |
+        set -euo pipefail
+        sudo fallocate -l 10G /swapfile || true
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile >/dev/null 2>&1 || true
+        sudo swapon /swapfile 2>/dev/null || true
+        echo "Swap: $(free -h | awk '/Swap:/ {print $2}')"
+
+    - name: 🧭 Initialize build paths
+      shell: bash
+      run: |
+        set -euo pipefail
+        mkdir -p "$HOME/toolchains" "$HOME/toolchains/images" "$RUNNER_TEMP/novakernel"
+        echo "TC_DIR=$HOME/toolchains" >> "$GITHUB_ENV"
+        echo "OUT_DIR=$GITHUB_WORKSPACE/out" >> "$GITHUB_ENV"
+        echo "WORK_DIR=$RUNNER_TEMP/novakernel" >> "$GITHUB_ENV"
