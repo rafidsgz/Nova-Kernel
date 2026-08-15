@@ -68,9 +68,9 @@ runs:
         fi
         mkdir -p "$OUT_DIR"
 
-        echo "🧾 Generating lineage-${DEVICE_NAME}_defconfig..."
+        echo "🧾 Generating ${DEVICE_NAME}_defconfig..."
         make -j"$(nproc)" -C "$GITHUB_WORKSPACE" O="$OUT_DIR" \
-          "lineage-${DEVICE_NAME}_defconfig"
+          "${DEVICE_NAME}_defconfig"
 
     - name: 🧩 Apply KernelSU configuration
       shell: bash
