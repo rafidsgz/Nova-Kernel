@@ -10,8 +10,8 @@ runs:
 
         # Change these two defaults when switching to another compiler release.
         # The archive format is detected dynamically after download.
-        CLANG_VERSION_DEFAULT="neutron-clang-30072026"
-        CLANG_URL_DEFAULT="https://github.com/Neutron-Toolchains/clang-build-catalogue/releases/download/30072026/neutron-clang-30072026.tar.zst"
+        CLANG_VERSION_DEFAULT="clang-r596125"
+        CLANG_URL_DEFAULT="https://github.com/bachnxuan/aosp_clang_mirror/releases/download/clang-r596125-15682573/clang-r596125.tar.gz"
 
         CLANG_VERSION="${CLANG_VERSION:-$CLANG_VERSION_DEFAULT}"
         CLANG_URL="${CLANG_URL:-$CLANG_URL_DEFAULT}"
