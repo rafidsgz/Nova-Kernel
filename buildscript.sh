@@ -46,7 +46,7 @@ NK_BACKPORT_URL="${NK_BACKPORT_URL:-https://raw.githubusercontent.com/JackA1ltma
 # ── Stock kernel image URLs ──────────────────────────────────────
 NK_IMG_URL_A73="${NK_IMG_URL_A73:-https://github.com/nicodotgit/proprietary_vendor_samsung_a73xq/releases/download/A736BXXSAGZA1_ODM/A736BXXSAGZA1_kernel.tar}"
 NK_IMG_URL_A52S="${NK_IMG_URL_A52S:-https://github.com/RisenID/proprietary_vendor_samsung_a52sxq/releases/download/A528BXXUAGXK8_BTU/A528BXXUAGXK8_kernel.tar}"
-NK_IMG_URL_M52="${NK_IMG_URL_M52:-https://github.com/nicodotgit/proprietary_vendor_samsung_m52xq/releases/download/M526BXXS7CYE1_CAU/M526BXXS7CYE1_kernel.tar}"
+NK_IMG_URL_M52="${NK_IMG_URL_M52:-https://github.com/Mesa-Labs-Archive/proprietary_vendor_samsung_m52xq/releases/download/M526BRXXU3CWH4_XID/M526BRXXU3CWH4_kernel.tar}"
 
 # ── Defconfig names ──────────────────────────────────────────────
 NK_DEFCONFIG="${NK_DEFCONFIG:-nova_defconfig}"
